@@ -119,7 +119,7 @@ public class SeckillService {
             // if (StrUtil.isNotBlank(lockKey)) {
 
             // Redisson 分布式锁处理
-            boolean isLocked = lock.tryLock(expireTime, TimeUnit.MILLISECONDS);
+            boolean isLocked = lock.tryLock(expireTime, expireTime, TimeUnit.MILLISECONDS);
             if (isLocked) {
                 // 下单
                 VoucherOrders voucherOrders = new VoucherOrders();
