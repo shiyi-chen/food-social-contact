@@ -3,6 +3,7 @@ package com.elec.seckill.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.scripting.support.ResourceScriptSource;
@@ -63,5 +64,25 @@ public class RedisLock {
                 unlockScript,
                 Collections.singletonList(lockName),
                 key + Thread.currentThread().getId(), null);
+    }
+
+    /**
+     *
+     * @param lockName 锁名  某某月报:2022:10
+     * @param releaseTime 过期时间
+     * @return
+     */
+    public Boolean simpleLock(String lockName, long releaseTime) {
+        return (Boolean) redisTemplate.execute((RedisCallback<Boolean>) connection -> {
+            // 获取时间毫秒值
+            long createTime = System.currentTimeMillis();
+            // 获取锁
+            Boolean setNX = connection.setNX(lockName.getBytes(), String.valueOf(createTime).getBytes());
+            // 设置超时时间
+            if (setNX!=null && setNX) {
+                connection.setEx(lockName.getBytes(), releaseTime, String.valueOf(createTime).getBytes());
+            }
+            return setNX;
+        });
     }
 }

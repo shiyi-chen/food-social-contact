@@ -53,6 +53,12 @@
             <artifactId>redisson-spring-boot-starter</artifactId>
             <version>3.13.6</version>
         </dependency>
+        <!-- test 单元测试 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>
